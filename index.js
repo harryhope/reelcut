@@ -1,1 +1,5 @@
-const a = 1
+const fluentFfmpeg = require('fluent-ffmpeg')
+
+module.exports = (ffmpeg = fluentFfmpeg) => {
+
+}
