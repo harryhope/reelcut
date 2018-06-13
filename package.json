@@ -1,0 +1,26 @@
+{
+  "name": "reelcut",
+  "version": "1.0.0",
+  "description": "Create a highlight reel from a video",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harryhope/reelcut.git"
+  },
+  "author": "Harry Hope",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/harryhope/reelcut/issues"
+  },
+  "homepage": "https://github.com/harryhope/reelcut#readme",
+  "dependencies": {
+    "fluent-ffmpeg": "^2.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-plugin-standard": "^3.1.0"
+  }
+}
