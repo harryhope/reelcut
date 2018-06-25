@@ -12,10 +12,10 @@ const probe = (ffmpeg, video) => new Promise((resolve, reject) => {
 
 const createCut = (ffmpeg, video, options) => new Promise((resolve, reject) => {
   ffmpeg(video)
-    .size(`${options.width}x${options.height}`)
     .seek(options.seek)
     .duration(options.length)
     .noAudio()
+    .videoFilters([`scale=${options.width}:${options.height},setsar=${Number(options.width) / Number(options.height)}`])
     .save(`${options.outputPath}${options.filename}`)
     .on('end', () => resolve(`${options.outputPath}${options.filename}`))
     .on('error', (err) => reject(err))
@@ -39,6 +39,7 @@ module.exports = (ffmpeg = fluentFfmpeg) => ({
       outputPath: './'
     })
     const metadata = await probe(ffmpeg, video)
+    console.log(metadata)
     const {duration} = metadata.format
     const cuts = _.range(options.amount).map((index) => {
       const lowerBound = duration / options.amount * index

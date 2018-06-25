@@ -4,10 +4,10 @@
   "description": "Create a highlight reel from a video",
   "main": "index.js",
   "scripts": {
-    "test": "npm run lint && npx mocha -t 12000",
+    "test": "npm run lint && npx mocha -t 48000",
     "lint": "npx eslint . --ext .js",
     "lint:fix": "npx eslint --fix . --ext .js",
-    "test:mocha": "npx mocha -t 12000"
+    "test:mocha": "npx mocha -t 48000"
   },
   "repository": {
     "type": "git",
