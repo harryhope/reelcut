@@ -29,23 +29,24 @@ const merge = (command, path) => new Promise((resolve, reject) => {
 })
 
 module.exports = (ffmpeg = fluentFfmpeg) => ({
-  cut: async (video, options = {}) => {
-    options = _.defaults(options, {
+  cut: async (video, userOptions = {}) => {
+    const options = _.defaults(userOptions, {
       amount: 4,
       length: 1.5,
       width: 660,
       height: 660,
+      prefix: 'vid',
       outputPath: './'
     })
     const metadata = await probe(ffmpeg, video)
     const {duration} = metadata.format
     const cuts = _.range(options.amount).map((index) => {
-      const lowerBound = duration/options.amount * index
-      const upperBound = _.min([_.floor(duration - options.length), duration/options.amount * (index + 1)])
+      const lowerBound = duration / options.amount * index
+      const upperBound = _.min([_.floor(duration - options.length), duration / options.amount * (index + 1)])
       const randomSeekTime = _.round(_.random(lowerBound, upperBound), 1)
       return createCut(ffmpeg, video, Object.assign({}, options, {
         seek: randomSeekTime,
-        filename: `vid-${index}.mp4`
+        filename: `${options.prefix}-${index}.mp4`
       }))
     })
     return Promise.all(cuts)
