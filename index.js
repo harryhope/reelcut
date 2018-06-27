@@ -15,7 +15,7 @@ const createCut = (ffmpeg, video, options) => new Promise((resolve, reject) => {
     .seek(options.seek)
     .duration(options.length)
     .noAudio()
-    .videoFilters([`scale=${options.width}:${options.height},setsar=${Number(options.width) / Number(options.height)}`])
+    .videoFilters([`crop=${options.width}:${options.height}`])
     .save(`${options.outputPath}${options.filename}`)
     .on('end', () => resolve(`${options.outputPath}${options.filename}`))
     .on('error', (err) => reject(err))
