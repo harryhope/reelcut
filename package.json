@@ -1,6 +1,6 @@
 {
   "name": "reelcut",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Create a highlight reel from a video",
   "main": "index.js",
   "scripts": {
