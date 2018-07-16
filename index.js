@@ -1,6 +1,14 @@
 const _ = require('lodash')
 const fluentFfmpeg = require('fluent-ffmpeg')
 
+const applyScale = (options, metadata, filtersList) => {
+  const height = metadata.streams.reduce((height, stream) => stream.height || height, null)
+  if (Number(options.height) > height) {
+    filtersList.unshift(`scale=-1:${options.height}`)
+  }
+  return filtersList
+}
+
 const probe = (ffmpeg, video) => new Promise((resolve, reject) => {
   ffmpeg.ffprobe(video, (err, metadata) => {
     if (err) {
@@ -10,12 +18,12 @@ const probe = (ffmpeg, video) => new Promise((resolve, reject) => {
   })
 })
 
-const createCut = (ffmpeg, video, options) => new Promise((resolve, reject) => {
+const createCut = (ffmpeg, video, metadata, options) => new Promise((resolve, reject) => {
   ffmpeg(video)
     .seek(options.seek)
     .duration(options.length)
     .noAudio()
-    .videoFilters([`crop=${options.width}:${options.height}`])
+    .videoFilters(applyScale(options, metadata, [`crop=${options.width}:${options.height}`]))
     .save(`${options.outputPath}${options.filename}`)
     .on('end', () => resolve(`${options.outputPath}${options.filename}`))
     .on('error', (err) => reject(err))
@@ -39,13 +47,12 @@ module.exports = (ffmpeg = fluentFfmpeg) => ({
       outputPath: './'
     })
     const metadata = await probe(ffmpeg, video)
-    console.log(metadata)
     const {duration} = metadata.format
     const cuts = _.range(options.amount).map((index) => {
       const lowerBound = duration / options.amount * index
       const upperBound = _.min([_.floor(duration - options.length), duration / options.amount * (index + 1)])
       const randomSeekTime = _.round(_.random(lowerBound, upperBound), 1)
-      return createCut(ffmpeg, video, Object.assign({}, options, {
+      return createCut(ffmpeg, video, metadata, Object.assign({}, options, {
         seek: randomSeekTime,
         filename: `${options.prefix}-${index}.mp4`
       }))
