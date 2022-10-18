@@ -44,10 +44,12 @@ module.exports = (ffmpeg = fluentFfmpeg) => ({
       width: 660,
       height: 660,
       prefix: 'vid',
-      outputPath: './'
+      outputPath: './',
+      clipFromEnd: 0
     })
     const metadata = await probe(ffmpeg, video)
-    const {duration} = metadata.format
+    let {duration} = metadata.format
+    duration = duration - options.clipFromEnd
     const cuts = _.range(options.amount).map((index) => {
       const lowerBound = duration / options.amount * index
       const upperBound = _.min([_.floor(duration - options.length), duration / options.amount * (index + 1)])
